@@ -45,8 +45,27 @@ function bitnovo_link($params)
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
 	$hrs_bitnovocom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
-	$hrs_bitnovocom_final_total = $amount;
-				
+
+if ($hrs_bitnovocom_currency === 'USD') {
+        $hrs_bitnovocom_final_total = $amount;
+		} else {
+		
+$hrs_bitnovocom_response = file_get_contents('https://api.highriskshop.com/control/convert.php?value=' . $amount . '&from=' . strtolower($hrs_bitnovocom_currency));
+
+
+$hrs_bitnovocom_conversion_resp = json_decode($hrs_bitnovocom_response, true);
+
+if ($hrs_bitnovocom_conversion_resp && isset($hrs_bitnovocom_conversion_resp['value_coin'])) {
+    // Escape output
+    $hrs_bitnovocom_final_total	= $hrs_bitnovocom_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}	
+		}
+		
+		
+		
+		
 $hrs_bitnovocom_gen_wallet = file_get_contents('https://api.highriskshop.com/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
