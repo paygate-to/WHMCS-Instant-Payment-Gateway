@@ -1,22 +1,22 @@
 {
   "schema": "1.0",
   "type": "whmcs-gateways",
-  "name": "upi",
+  "name": "interac",
   "license": "proprietary",
   "category": "payments",
   "description": {
-    "name": "upi",
-    "tagline": "Instant Approval High Risk Merchant Gateway (UPI/IMPS)",
-    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using UPI/IMPS infrastructure",
+    "name": "interac",
+    "tagline": "Instant Approval High Risk Merchant Gateway (Interac CAD)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using Interac CAD infrastructure",
     "features": [
-      "Accept UPI/IMPS directly on your site",
+      "Accept Interac directly on your site",
       "Instant Approval",
       "Instant payouts to your USDC Polygon wallet",
       "ZERO Chargebacks all payments are final."
     ]
   },
   "logo": {
-    "filename": "upi.png"
+    "filename": "interac.png"
   },
   "support": {
     "homepage": "https:\/\/www.highriskshop.com\/",

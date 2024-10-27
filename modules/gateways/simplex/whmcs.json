@@ -1,22 +1,22 @@
 {
   "schema": "1.0",
   "type": "whmcs-gateways",
-  "name": "upi",
+  "name": "simplex",
   "license": "proprietary",
   "category": "payments",
   "description": {
-    "name": "upi",
-    "tagline": "Instant Approval High Risk Merchant Gateway (UPI/IMPS)",
-    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using UPI/IMPS infrastructure",
+    "name": "simplex",
+    "tagline": "Instant Approval High Risk Merchant Gateway (simplex.com)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using simplex.com infrastructure",
     "features": [
-      "Accept UPI/IMPS directly on your site",
+      "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
       "Instant Approval",
       "Instant payouts to your USDC Polygon wallet",
       "ZERO Chargebacks all payments are final."
     ]
   },
   "logo": {
-    "filename": "upi.png"
+    "filename": "simplex.png"
   },
   "support": {
     "homepage": "https:\/\/www.highriskshop.com\/",
