@@ -3,27 +3,27 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-function interac_MetaData()
+function swipelux_MetaData()
 {
     return array(
-        'DisplayName' => 'interac',
+        'DisplayName' => 'swipelux',
         'DisableLocalCreditCardInput' => true,
     );
 }
 
-function interac_config()
+function swipelux_config()
 {
     return array(
         'FriendlyName' => array(
             'Type' => 'System',
-            'Value' => 'interac',
+            'Value' => 'swipelux',
         ),
         'description' => array(
             'FriendlyName' => 'Description',
             'Type' => 'textarea',
             'Rows' => '3',
             'Cols' => '25',
-            'Default' => 'Pay using Interac CAD.',
+            'Default' => 'Pay using Credit/debit card (including MasterCard, Visa, and Apple Pay).',
             'Description' => 'This controls the description which the user sees during checkout.',
         ),
         'wallet_address' => array(
@@ -34,42 +34,34 @@ function interac_config()
     );
 }
 
-function interac_link($params)
+function swipelux_link($params)
 {
     $walletAddress = $params['wallet_address'];
     $amount = $params['amount'];
     $invoiceId = $params['invoiceid'];
 	$email = $params['clientdetails']['email'];
     $systemUrl = rtrim($params['systemurl'], '/');
-    $redirectUrl = $systemUrl . '/modules/gateways/callback/interac.php';
+    $redirectUrl = $systemUrl . '/modules/gateways/callback/swipelux.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$paygatedotto_interaccad_currency = $params['currency'];
+	$paygatedotto_swipeluxcom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
-
-if ($paygatedotto_interaccad_currency !== 'CAD') {
-        return "Error: Invoice currency must be CAD";
-		} else {
-		$paygatedotto_interaccad_final_total = $amount;
-		}
-		
-		
-		
-		
-$paygatedotto_interaccad_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+	$paygatedotto_swipeluxcom_final_total = $amount;
+				
+$paygatedotto_swipeluxcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$paygatedotto_interaccad_wallet_decbody = json_decode($paygatedotto_interaccad_gen_wallet, true);
+	$paygatedotto_swipeluxcom_wallet_decbody = json_decode($paygatedotto_swipeluxcom_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($paygatedotto_interaccad_wallet_decbody && isset($paygatedotto_interaccad_wallet_decbody['address_in'])) {
+    if ($paygatedotto_swipeluxcom_wallet_decbody && isset($paygatedotto_swipeluxcom_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $paygatedotto_interaccad_gen_addressIn = $paygatedotto_interaccad_wallet_decbody['address_in'];
-        $paygatedotto_interaccad_gen_polygon_addressIn = $paygatedotto_interaccad_wallet_decbody['polygon_address_in'];
-		$paygatedotto_interaccad_gen_callback = $paygatedotto_interaccad_wallet_decbody['callback_url'];
+        $paygatedotto_swipeluxcom_gen_addressIn = $paygatedotto_swipeluxcom_wallet_decbody['address_in'];
+        $paygatedotto_swipeluxcom_gen_polygon_addressIn = $paygatedotto_swipeluxcom_wallet_decbody['polygon_address_in'];
+		$paygatedotto_swipeluxcom_gen_callback = $paygatedotto_swipeluxcom_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $paygatedotto_interaccad_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_swipeluxcom_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -83,35 +75,35 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_interaccad_gen_addressIn . '&amount=' . $paygatedotto_interaccad_final_total . '&provider=interac&email=' . urlencode($email) . '&currency=' . $paygatedotto_interaccad_currency;
+        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_swipeluxcom_gen_addressIn . '&amount=' . $paygatedotto_swipeluxcom_final_total . '&provider=swipelux&email=' . urlencode($email) . '&currency=' . $paygatedotto_swipeluxcom_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';
 }
 
-function interac_activate()
+function swipelux_activate()
 {
     // You can customize activation logic if needed
-    return array('status' => 'success', 'description' => 'interac gateway activated successfully.');
+    return array('status' => 'success', 'description' => 'swipelux gateway activated successfully.');
 }
 
-function interac_deactivate()
+function swipelux_deactivate()
 {
     // You can customize deactivation logic if needed
-    return array('status' => 'success', 'description' => 'interac gateway deactivated successfully.');
+    return array('status' => 'success', 'description' => 'swipelux gateway deactivated successfully.');
 }
 
-function interac_upgrade($vars)
+function swipelux_upgrade($vars)
 {
     // You can customize upgrade logic if needed
 }
 
-function interac_output($vars)
+function swipelux_output($vars)
 {
     // Output additional information if needed
 }
 
-function interac_error($vars)
+function swipelux_error($vars)
 {
     // Handle errors if needed
 }

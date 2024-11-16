@@ -43,25 +43,25 @@ function simpleswap_link($params)
     $systemUrl = rtrim($params['systemurl'], '/');
     $redirectUrl = $systemUrl . '/modules/gateways/callback/simpleswap.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$hrs_simpleswapio_currency = $params['currency'];
+	$paygatedotto_simpleswapio_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
-	$hrs_simpleswapio_final_total = $amount;
+	$paygatedotto_simpleswapio_final_total = $amount;
 				
-$hrs_simpleswapio_gen_wallet = file_get_contents('https://api.highriskshop.com/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_simpleswapio_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$hrs_simpleswapio_wallet_decbody = json_decode($hrs_simpleswapio_gen_wallet, true);
+	$paygatedotto_simpleswapio_wallet_decbody = json_decode($paygatedotto_simpleswapio_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($hrs_simpleswapio_wallet_decbody && isset($hrs_simpleswapio_wallet_decbody['address_in'])) {
+    if ($paygatedotto_simpleswapio_wallet_decbody && isset($paygatedotto_simpleswapio_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $hrs_simpleswapio_gen_addressIn = $hrs_simpleswapio_wallet_decbody['address_in'];
-        $hrs_simpleswapio_gen_polygon_addressIn = $hrs_simpleswapio_wallet_decbody['polygon_address_in'];
-		$hrs_simpleswapio_gen_callback = $hrs_simpleswapio_wallet_decbody['callback_url'];
+        $paygatedotto_simpleswapio_gen_addressIn = $paygatedotto_simpleswapio_wallet_decbody['address_in'];
+        $paygatedotto_simpleswapio_gen_polygon_addressIn = $paygatedotto_simpleswapio_wallet_decbody['polygon_address_in'];
+		$paygatedotto_simpleswapio_gen_callback = $paygatedotto_simpleswapio_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $hrs_simpleswapio_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_simpleswapio_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -75,7 +75,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://pay.highriskshop.com/process-payment.php?address=' . $hrs_simpleswapio_gen_addressIn . '&amount=' . $hrs_simpleswapio_final_total . '&provider=simpleswap&email=' . urlencode($email) . '&currency=' . $hrs_simpleswapio_currency;
+        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_simpleswapio_gen_addressIn . '&amount=' . $paygatedotto_simpleswapio_final_total . '&provider=simpleswap&email=' . urlencode($email) . '&currency=' . $paygatedotto_simpleswapio_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

@@ -43,33 +43,33 @@ function upi_link($params)
     $systemUrl = rtrim($params['systemurl'], '/');
     $redirectUrl = $systemUrl . '/modules/gateways/callback/upi.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$hrs_upiimps_currency = $params['currency'];
+	$paygatedotto_upiimps_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 
-if ($hrs_upiimps_currency !== 'INR') {
+if ($paygatedotto_upiimps_currency !== 'INR') {
         return "Error: Invoice currency must be INR";
 		} else {
-		$hrs_upiimps_final_total = $amount;
+		$paygatedotto_upiimps_final_total = $amount;
 		}
 		
 		
 		
 		
-$hrs_upiimps_gen_wallet = file_get_contents('https://api.highriskshop.com/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_upiimps_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$hrs_upiimps_wallet_decbody = json_decode($hrs_upiimps_gen_wallet, true);
+	$paygatedotto_upiimps_wallet_decbody = json_decode($paygatedotto_upiimps_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($hrs_upiimps_wallet_decbody && isset($hrs_upiimps_wallet_decbody['address_in'])) {
+    if ($paygatedotto_upiimps_wallet_decbody && isset($paygatedotto_upiimps_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $hrs_upiimps_gen_addressIn = $hrs_upiimps_wallet_decbody['address_in'];
-        $hrs_upiimps_gen_polygon_addressIn = $hrs_upiimps_wallet_decbody['polygon_address_in'];
-		$hrs_upiimps_gen_callback = $hrs_upiimps_wallet_decbody['callback_url'];
+        $paygatedotto_upiimps_gen_addressIn = $paygatedotto_upiimps_wallet_decbody['address_in'];
+        $paygatedotto_upiimps_gen_polygon_addressIn = $paygatedotto_upiimps_wallet_decbody['polygon_address_in'];
+		$paygatedotto_upiimps_gen_callback = $paygatedotto_upiimps_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $hrs_upiimps_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_upiimps_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -83,7 +83,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://pay.highriskshop.com/process-payment.php?address=' . $hrs_upiimps_gen_addressIn . '&amount=' . $hrs_upiimps_final_total . '&provider=upi&email=' . urlencode($email) . '&currency=' . $hrs_upiimps_currency;
+        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_upiimps_gen_addressIn . '&amount=' . $paygatedotto_upiimps_final_total . '&provider=upi&email=' . urlencode($email) . '&currency=' . $paygatedotto_upiimps_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

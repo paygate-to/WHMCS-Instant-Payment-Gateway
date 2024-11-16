@@ -43,21 +43,21 @@ function stripe_link($params)
     $systemUrl = rtrim($params['systemurl'], '/');
     $redirectUrl = $systemUrl . '/modules/gateways/callback/stripe.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$hrs_stripecom_currency = $params['currency'];
+	$paygatedotto_stripecom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 
-if ($hrs_stripecom_currency === 'USD') {
-        $hrs_stripecom_final_total = $amount;
+if ($paygatedotto_stripecom_currency === 'USD') {
+        $paygatedotto_stripecom_final_total = $amount;
 		} else {
 		
-$hrs_stripecom_response = file_get_contents('https://api.highriskshop.com/control/convert.php?value=' . $amount . '&from=' . strtolower($hrs_stripecom_currency));
+$paygatedotto_stripecom_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_stripecom_currency));
 
 
-$hrs_stripecom_conversion_resp = json_decode($hrs_stripecom_response, true);
+$paygatedotto_stripecom_conversion_resp = json_decode($paygatedotto_stripecom_response, true);
 
-if ($hrs_stripecom_conversion_resp && isset($hrs_stripecom_conversion_resp['value_coin'])) {
+if ($paygatedotto_stripecom_conversion_resp && isset($paygatedotto_stripecom_conversion_resp['value_coin'])) {
     // Escape output
-    $hrs_stripecom_final_total	= $hrs_stripecom_conversion_resp['value_coin'];      
+    $paygatedotto_stripecom_final_total	= $paygatedotto_stripecom_conversion_resp['value_coin'];      
 } else {
 	return "Error: Payment could not be processed, please try again (unsupported store currency)";
 }	
@@ -66,21 +66,21 @@ if ($hrs_stripecom_conversion_resp && isset($hrs_stripecom_conversion_resp['valu
 		
 		
 		
-$hrs_stripecom_gen_wallet = file_get_contents('https://api.highriskshop.com/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_stripecom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$hrs_stripecom_wallet_decbody = json_decode($hrs_stripecom_gen_wallet, true);
+	$paygatedotto_stripecom_wallet_decbody = json_decode($paygatedotto_stripecom_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($hrs_stripecom_wallet_decbody && isset($hrs_stripecom_wallet_decbody['address_in'])) {
+    if ($paygatedotto_stripecom_wallet_decbody && isset($paygatedotto_stripecom_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $hrs_stripecom_gen_addressIn = $hrs_stripecom_wallet_decbody['address_in'];
-        $hrs_stripecom_gen_polygon_addressIn = $hrs_stripecom_wallet_decbody['polygon_address_in'];
-		$hrs_stripecom_gen_callback = $hrs_stripecom_wallet_decbody['callback_url'];
+        $paygatedotto_stripecom_gen_addressIn = $paygatedotto_stripecom_wallet_decbody['address_in'];
+        $paygatedotto_stripecom_gen_polygon_addressIn = $paygatedotto_stripecom_wallet_decbody['polygon_address_in'];
+		$paygatedotto_stripecom_gen_callback = $paygatedotto_stripecom_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $hrs_stripecom_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_stripecom_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -94,7 +94,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://pay.highriskshop.com/process-payment.php?address=' . $hrs_stripecom_gen_addressIn . '&amount=' . $hrs_stripecom_final_total . '&provider=stripe&email=' . urlencode($email) . '&currency=' . $hrs_stripecom_currency;
+        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_stripecom_gen_addressIn . '&amount=' . $paygatedotto_stripecom_final_total . '&provider=stripe&email=' . urlencode($email) . '&currency=' . $paygatedotto_stripecom_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

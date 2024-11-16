@@ -30,9 +30,9 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
 
     // Convert invoice total to USD if necessary
     if ($invoiceCurrencyCode !== 'USD') {
-        // Fetch conversion rate from highriskshop.com API
+        // Fetch conversion rate from paygate.to API
         $conversionResponse = file_get_contents(
-            'https://api.highriskshop.com/control/convert.php?value=' . $invoiceTotal . '&from=' . strtolower($invoiceCurrencyCode)
+            'https://api.paygate.to/control/convert.php?value=' . $invoiceTotal . '&from=' . strtolower($invoiceCurrencyCode)
         );
 
         if ($conversionResponse === false) {

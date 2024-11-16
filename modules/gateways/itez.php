@@ -3,20 +3,20 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-function topper_MetaData()
+function itez_MetaData()
 {
     return array(
-        'DisplayName' => 'topper',
+        'DisplayName' => 'itez',
         'DisableLocalCreditCardInput' => true,
     );
 }
 
-function topper_config()
+function itez_config()
 {
     return array(
         'FriendlyName' => array(
             'Type' => 'System',
-            'Value' => 'topper',
+            'Value' => 'itez',
         ),
         'description' => array(
             'FriendlyName' => 'Description',
@@ -27,41 +27,41 @@ function topper_config()
             'Description' => 'This controls the description which the user sees during checkout.',
         ),
         'wallet_address' => array(
-            'FriendlyName' => 'USDC Polygon Wallet Address',
+            'FriendlyName' => 'USDT Polygon Wallet Address',
             'Type' => 'text',
-            'Description' => 'Insert your USDC Polygon Wallet address.',
+            'Description' => 'Insert your USDT Polygon Wallet address.',
         ),
     );
 }
 
-function topper_link($params)
+function itez_link($params)
 {
     $walletAddress = $params['wallet_address'];
     $amount = $params['amount'];
     $invoiceId = $params['invoiceid'];
 	$email = $params['clientdetails']['email'];
     $systemUrl = rtrim($params['systemurl'], '/');
-    $redirectUrl = $systemUrl . '/modules/gateways/callback/topper.php';
+    $redirectUrl = $systemUrl . '/modules/gateways/callback/itez.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$paygatedotto_topperpaycom_currency = $params['currency'];
+	$paygatedotto_itezcom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
-	$paygatedotto_topperpaycom_final_total = $amount;
+	$paygatedotto_itezcom_final_total = $amount;
 				
-$paygatedotto_topperpaycom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_itezcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$paygatedotto_topperpaycom_wallet_decbody = json_decode($paygatedotto_topperpaycom_gen_wallet, true);
+	$paygatedotto_itezcom_wallet_decbody = json_decode($paygatedotto_itezcom_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($paygatedotto_topperpaycom_wallet_decbody && isset($paygatedotto_topperpaycom_wallet_decbody['address_in'])) {
+    if ($paygatedotto_itezcom_wallet_decbody && isset($paygatedotto_itezcom_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $paygatedotto_topperpaycom_gen_addressIn = $paygatedotto_topperpaycom_wallet_decbody['address_in'];
-        $paygatedotto_topperpaycom_gen_polygon_addressIn = $paygatedotto_topperpaycom_wallet_decbody['polygon_address_in'];
-		$paygatedotto_topperpaycom_gen_callback = $paygatedotto_topperpaycom_wallet_decbody['callback_url'];
+        $paygatedotto_itezcom_gen_addressIn = $paygatedotto_itezcom_wallet_decbody['address_in'];
+        $paygatedotto_itezcom_gen_polygon_addressIn = $paygatedotto_itezcom_wallet_decbody['polygon_address_in'];
+		$paygatedotto_itezcom_gen_callback = $paygatedotto_itezcom_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $paygatedotto_topperpaycom_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_itezcom_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -75,35 +75,35 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_topperpaycom_gen_addressIn . '&amount=' . $paygatedotto_topperpaycom_final_total . '&provider=topper&email=' . urlencode($email) . '&currency=' . $paygatedotto_topperpaycom_currency;
+        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_itezcom_gen_addressIn . '&amount=' . $paygatedotto_itezcom_final_total . '&provider=itez&email=' . urlencode($email) . '&currency=' . $paygatedotto_itezcom_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';
 }
 
-function topper_activate()
+function itez_activate()
 {
     // You can customize activation logic if needed
-    return array('status' => 'success', 'description' => 'topper gateway activated successfully.');
+    return array('status' => 'success', 'description' => 'itez gateway activated successfully.');
 }
 
-function topper_deactivate()
+function itez_deactivate()
 {
     // You can customize deactivation logic if needed
-    return array('status' => 'success', 'description' => 'topper gateway deactivated successfully.');
+    return array('status' => 'success', 'description' => 'itez gateway deactivated successfully.');
 }
 
-function topper_upgrade($vars)
+function itez_upgrade($vars)
 {
     // You can customize upgrade logic if needed
 }
 
-function topper_output($vars)
+function itez_output($vars)
 {
     // Output additional information if needed
 }
 
-function topper_error($vars)
+function itez_error($vars)
 {
     // Handle errors if needed
 }

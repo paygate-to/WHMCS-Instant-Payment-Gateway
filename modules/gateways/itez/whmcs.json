@@ -1,22 +1,22 @@
 {
   "schema": "1.0",
   "type": "whmcs-gateways",
-  "name": "stripe",
+  "name": "itez",
   "license": "proprietary",
   "category": "payments",
   "description": {
-    "name": "stripe",
-    "tagline": "Instant Approval High Risk Merchant Gateway (stripe.com)",
-    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using stripe.com infrastructure",
+    "name": "itez",
+    "tagline": "Instant Approval High Risk Merchant Gateway (itez.com)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDT Polygon wallet using itez.com infrastructure",
     "features": [
       "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
       "Instant Approval",
-      "Instant payouts to your USDC Polygon wallet",
+      "Instant payouts to your USDT Polygon wallet",
       "ZERO Chargebacks all payments are final."
     ]
   },
   "logo": {
-    "filename": "stripe.png"
+    "filename": "itez.png"
   },
   "support": {
     "homepage": "https:\/\/paygate.to\/",

@@ -1,13 +1,13 @@
 {
   "schema": "1.0",
   "type": "whmcs-gateways",
-  "name": "stripe",
+  "name": "swipelux",
   "license": "proprietary",
   "category": "payments",
   "description": {
-    "name": "stripe",
-    "tagline": "Instant Approval High Risk Merchant Gateway (stripe.com)",
-    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using stripe.com infrastructure",
+    "name": "swipelux",
+    "tagline": "Instant Approval High Risk Merchant Gateway (swipelux.com)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using swipelux.com infrastructure",
     "features": [
       "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
       "Instant Approval",
@@ -16,7 +16,7 @@
     ]
   },
   "logo": {
-    "filename": "stripe.png"
+    "filename": "swipelux.png"
   },
   "support": {
     "homepage": "https:\/\/paygate.to\/",

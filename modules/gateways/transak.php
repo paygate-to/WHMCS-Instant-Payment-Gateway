@@ -43,25 +43,25 @@ function transak_link($params)
     $systemUrl = rtrim($params['systemurl'], '/');
     $redirectUrl = $systemUrl . '/modules/gateways/callback/transak.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$hrs_transakcom_currency = $params['currency'];
+	$paygatedotto_transakcom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
-	$hrs_transakcom_final_total = $amount;
+	$paygatedotto_transakcom_final_total = $amount;
 				
-$hrs_transakcom_gen_wallet = file_get_contents('https://api.highriskshop.com/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_transakcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$hrs_transakcom_wallet_decbody = json_decode($hrs_transakcom_gen_wallet, true);
+	$paygatedotto_transakcom_wallet_decbody = json_decode($paygatedotto_transakcom_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($hrs_transakcom_wallet_decbody && isset($hrs_transakcom_wallet_decbody['address_in'])) {
+    if ($paygatedotto_transakcom_wallet_decbody && isset($paygatedotto_transakcom_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $hrs_transakcom_gen_addressIn = $hrs_transakcom_wallet_decbody['address_in'];
-        $hrs_transakcom_gen_polygon_addressIn = $hrs_transakcom_wallet_decbody['polygon_address_in'];
-		$hrs_transakcom_gen_callback = $hrs_transakcom_wallet_decbody['callback_url'];
+        $paygatedotto_transakcom_gen_addressIn = $paygatedotto_transakcom_wallet_decbody['address_in'];
+        $paygatedotto_transakcom_gen_polygon_addressIn = $paygatedotto_transakcom_wallet_decbody['polygon_address_in'];
+		$paygatedotto_transakcom_gen_callback = $paygatedotto_transakcom_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $hrs_transakcom_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_transakcom_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -75,7 +75,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://pay.highriskshop.com/process-payment.php?address=' . $hrs_transakcom_gen_addressIn . '&amount=' . $hrs_transakcom_final_total . '&provider=transak&email=' . urlencode($email) . '&currency=' . $hrs_transakcom_currency;
+        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_transakcom_gen_addressIn . '&amount=' . $paygatedotto_transakcom_final_total . '&provider=transak&email=' . urlencode($email) . '&currency=' . $paygatedotto_transakcom_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

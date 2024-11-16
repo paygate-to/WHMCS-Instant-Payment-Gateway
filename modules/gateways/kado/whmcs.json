@@ -1,13 +1,13 @@
 {
   "schema": "1.0",
   "type": "whmcs-gateways",
-  "name": "stripe",
+  "name": "kado",
   "license": "proprietary",
   "category": "payments",
   "description": {
-    "name": "stripe",
-    "tagline": "Instant Approval High Risk Merchant Gateway (stripe.com)",
-    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using stripe.com infrastructure",
+    "name": "kado",
+    "tagline": "Instant Approval High Risk Merchant Gateway (kado.money)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using kado.money infrastructure",
     "features": [
       "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
       "Instant Approval",
@@ -16,7 +16,7 @@
     ]
   },
   "logo": {
-    "filename": "stripe.png"
+    "filename": "kado.png"
   },
   "support": {
     "homepage": "https:\/\/paygate.to\/",

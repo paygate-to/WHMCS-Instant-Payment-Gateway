@@ -62,7 +62,7 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
     // Mark the invoice as paid
     $paymentSuccess = [
         'invoiceid' => $invoiceId,
-        'transid' => 'coinbase_payment_' . time(), // Replace with the actual transaction ID if available
+        'transid' => 'kado_payment_' . time(), // Replace with the actual transaction ID if available
         'date' => date('Y-m-d H:i:s'),
     ];
 
