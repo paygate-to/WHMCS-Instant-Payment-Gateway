@@ -46,6 +46,27 @@ function alchemypay_link($params)
 	$paygatedotto_alchemypayorg_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_alchemypayorg_final_total = $amount;
+
+if ($paygatedotto_alchemypayorg_currency === 'USD') {
+        $paygatedotto_alchemypayorg_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_alchemypayorg_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_alchemypayorg_currency));
+
+
+$paygatedotto_alchemypayorg_minimumcheck_conversion_resp = json_decode($paygatedotto_alchemypayorg_minimumcheck_response, true);
+
+if ($paygatedotto_alchemypayorg_minimumcheck_conversion_resp && isset($paygatedotto_alchemypayorg_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_alchemypayorg_minimumcheck_final_total	= $paygatedotto_alchemypayorg_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_alchemypayorg_minimumcheck_final_total < 5) {
+return "Error: Invoice total must be $5 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_alchemypayorg_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

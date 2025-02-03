@@ -46,6 +46,27 @@ function simplex_link($params)
 	$paygatedotto_simplexcom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_simplexcom_final_total = $amount;
+
+if ($paygatedotto_simplexcom_currency === 'USD') {
+        $paygatedotto_simplexcom_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_simplexcom_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_simplexcom_currency));
+
+
+$paygatedotto_simplexcom_minimumcheck_conversion_resp = json_decode($paygatedotto_simplexcom_minimumcheck_response, true);
+
+if ($paygatedotto_simplexcom_minimumcheck_conversion_resp && isset($paygatedotto_simplexcom_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_simplexcom_minimumcheck_final_total	= $paygatedotto_simplexcom_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_simplexcom_minimumcheck_final_total < 50) {
+return "Error: Invoice total must be $50 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_simplexcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

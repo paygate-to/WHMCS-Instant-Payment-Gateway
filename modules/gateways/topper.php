@@ -46,6 +46,27 @@ function topper_link($params)
 	$paygatedotto_topperpaycom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_topperpaycom_final_total = $amount;
+
+if ($paygatedotto_topperpaycom_currency === 'USD') {
+        $paygatedotto_topperpaycom_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_topperpaycom_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_topperpaycom_currency));
+
+
+$paygatedotto_topperpaycom_minimumcheck_conversion_resp = json_decode($paygatedotto_topperpaycom_minimumcheck_response, true);
+
+if ($paygatedotto_topperpaycom_minimumcheck_conversion_resp && isset($paygatedotto_topperpaycom_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_topperpaycom_minimumcheck_final_total	= $paygatedotto_topperpaycom_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_topperpaycom_minimumcheck_final_total < 10) {
+return "Error: Invoice total must be $10 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_topperpaycom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

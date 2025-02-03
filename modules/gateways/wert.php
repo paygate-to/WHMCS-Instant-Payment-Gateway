@@ -64,7 +64,9 @@ if ($paygatedotto_wertio_conversion_resp && isset($paygatedotto_wertio_conversio
 		}
 		
 		
-		
+if ($paygatedotto_wertio_final_total < 1) {
+return "Error: Invoice total must be $1 USD or more for the selected payment provider.";
+}	
 		
 $paygatedotto_wertio_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

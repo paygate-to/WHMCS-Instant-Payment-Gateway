@@ -64,7 +64,9 @@ if ($paygatedotto_robinhoodcom_conversion_resp && isset($paygatedotto_robinhoodc
 		}
 		
 		
-		
+if ($paygatedotto_robinhoodcom_final_total < 5) {
+return "Error: Invoice total must be $5 USD or more for the selected payment provider.";
+}		
 		
 $paygatedotto_robinhoodcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

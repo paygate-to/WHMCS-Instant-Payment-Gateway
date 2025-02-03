@@ -64,7 +64,9 @@ if ($paygatedotto_rampnetwork_conversion_resp && isset($paygatedotto_rampnetwork
 		}
 		
 		
-		
+if ($paygatedotto_rampnetwork_final_total < 4) {
+return "Error: Invoice total must be $4 USD or more for the selected payment provider.";
+}		
 		
 $paygatedotto_rampnetwork_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

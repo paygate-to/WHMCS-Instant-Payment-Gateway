@@ -63,7 +63,9 @@ if ($paygatedotto_bitnovocom_conversion_resp && isset($paygatedotto_bitnovocom_c
 }	
 		}
 		
-		
+if ($paygatedotto_bitnovocom_final_total < 10) {
+return "Error: Invoice total must be $10 USD or more for the selected payment provider.";
+}		
 		
 		
 $paygatedotto_bitnovocom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));

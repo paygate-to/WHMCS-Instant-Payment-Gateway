@@ -46,6 +46,27 @@ function transak_link($params)
 	$paygatedotto_transakcom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_transakcom_final_total = $amount;
+
+if ($paygatedotto_transakcom_currency === 'USD') {
+        $paygatedotto_transakcom_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_transakcom_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_transakcom_currency));
+
+
+$paygatedotto_transakcom_minimumcheck_conversion_resp = json_decode($paygatedotto_transakcom_minimumcheck_response, true);
+
+if ($paygatedotto_transakcom_minimumcheck_conversion_resp && isset($paygatedotto_transakcom_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_transakcom_minimumcheck_final_total	= $paygatedotto_transakcom_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_transakcom_minimumcheck_final_total < 15) {
+return "Error: Invoice total must be $15 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_transakcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

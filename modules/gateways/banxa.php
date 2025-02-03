@@ -46,6 +46,27 @@ function banxa_link($params)
 	$paygatedotto_banxacom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_banxacom_final_total = $amount;
+	
+if ($paygatedotto_banxacom_currency === 'USD') {
+        $paygatedotto_banxacom_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_banxacom_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_banxacom_currency));
+
+
+$paygatedotto_banxacom_minimumcheck_conversion_resp = json_decode($paygatedotto_banxacom_minimumcheck_response, true);
+
+if ($paygatedotto_banxacom_minimumcheck_conversion_resp && isset($paygatedotto_banxacom_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_banxacom_minimumcheck_final_total	= $paygatedotto_banxacom_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_banxacom_minimumcheck_final_total < 20) {
+return "Error: Invoice total must be $20 USD or more for the selected payment provider.";
+}	
 				
 $paygatedotto_banxacom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

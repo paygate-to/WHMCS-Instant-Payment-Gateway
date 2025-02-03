@@ -46,6 +46,27 @@ function changenow_link($params)
 	$paygatedotto_changenowio_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_changenowio_final_total = $amount;
+	
+if ($paygatedotto_changenowio_currency === 'USD') {
+        $paygatedotto_changenowio_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_changenowio_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_changenowio_currency));
+
+
+$paygatedotto_changenowio_minimumcheck_conversion_resp = json_decode($paygatedotto_changenowio_minimumcheck_response, true);
+
+if ($paygatedotto_changenowio_minimumcheck_conversion_resp && isset($paygatedotto_changenowio_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_changenowio_minimumcheck_final_total	= $paygatedotto_changenowio_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_changenowio_minimumcheck_final_total < 20) {
+return "Error: Invoice total must be $20 USD or more for the selected payment provider.";
+}	
 				
 $paygatedotto_changenowio_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

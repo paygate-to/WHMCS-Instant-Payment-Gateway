@@ -46,6 +46,27 @@ function swipelux_link($params)
 	$paygatedotto_swipeluxcom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_swipeluxcom_final_total = $amount;
+
+if ($paygatedotto_swipeluxcom_currency === 'USD') {
+        $paygatedotto_swipeluxcom_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_swipeluxcom_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_swipeluxcom_currency));
+
+
+$paygatedotto_swipeluxcom_minimumcheck_conversion_resp = json_decode($paygatedotto_swipeluxcom_minimumcheck_response, true);
+
+if ($paygatedotto_swipeluxcom_minimumcheck_conversion_resp && isset($paygatedotto_swipeluxcom_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_swipeluxcom_minimumcheck_final_total	= $paygatedotto_swipeluxcom_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_swipeluxcom_minimumcheck_final_total < 14) {
+return "Error: Invoice total must be $14 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_swipeluxcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

@@ -64,7 +64,9 @@ if ($paygatedotto_stripecom_conversion_resp && isset($paygatedotto_stripecom_con
 		}
 		
 		
-		
+if ($paygatedotto_stripecom_final_total < 2) {
+return "Error: Invoice total must be $2 USD or more for the selected payment provider.";
+}		
 		
 $paygatedotto_stripecom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

@@ -50,6 +50,9 @@ if ($paygatedotto_interaccad_currency !== 'CAD') {
         return "Error: Invoice currency must be CAD";
 		} else {
 		$paygatedotto_interaccad_final_total = $amount;
+		if ($paygatedotto_interaccad_final_total < 100) {
+return "Error: Invoice total must be CA$100 or more for the selected payment provider.";
+}
 		}
 		
 		

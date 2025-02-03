@@ -63,7 +63,9 @@ if ($paygatedotto_transficom_conversion_resp && isset($paygatedotto_transficom_c
 }	
 		}
 		
-		
+if ($paygatedotto_transficom_final_total < 70) {
+return "Error: Invoice total must be $70 USD or more for the selected payment provider.";
+}		
 		
 		
 $paygatedotto_transficom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));

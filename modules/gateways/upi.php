@@ -50,6 +50,9 @@ if ($paygatedotto_upiimps_currency !== 'INR') {
         return "Error: Invoice currency must be INR";
 		} else {
 		$paygatedotto_upiimps_final_total = $amount;
+		if ($paygatedotto_upiimps_final_total < 100) {
+return "Error: Invoice total must be ₹100 or more for the selected payment provider.";
+}
 		}
 		
 		

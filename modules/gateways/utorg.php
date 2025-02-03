@@ -46,6 +46,27 @@ function utorg_link($params)
 	$paygatedotto_utorgpro_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_utorgpro_final_total = $amount;
+
+if ($paygatedotto_utorgpro_currency === 'USD') {
+        $paygatedotto_utorgpro_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_utorgpro_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_utorgpro_currency));
+
+
+$paygatedotto_utorgpro_minimumcheck_conversion_resp = json_decode($paygatedotto_utorgpro_minimumcheck_response, true);
+
+if ($paygatedotto_utorgpro_minimumcheck_conversion_resp && isset($paygatedotto_utorgpro_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_utorgpro_minimumcheck_final_total	= $paygatedotto_utorgpro_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_utorgpro_minimumcheck_final_total < 50) {
+return "Error: Invoice total must be $50 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_utorgpro_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

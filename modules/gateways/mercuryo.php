@@ -46,6 +46,27 @@ function mercuryo_link($params)
 	$paygatedotto_mercuryoio_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_mercuryoio_final_total = $amount;
+
+if ($paygatedotto_mercuryoio_currency === 'USD') {
+        $paygatedotto_mercuryoio_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_mercuryoio_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_mercuryoio_currency));
+
+
+$paygatedotto_mercuryoio_minimumcheck_conversion_resp = json_decode($paygatedotto_mercuryoio_minimumcheck_response, true);
+
+if ($paygatedotto_mercuryoio_minimumcheck_conversion_resp && isset($paygatedotto_mercuryoio_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_mercuryoio_minimumcheck_final_total	= $paygatedotto_mercuryoio_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_mercuryoio_minimumcheck_final_total < 30) {
+return "Error: Invoice total must be $30 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_mercuryoio_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

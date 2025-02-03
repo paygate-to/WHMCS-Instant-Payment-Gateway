@@ -46,6 +46,27 @@ function guardarian_link($params)
 	$paygatedotto_guardariancom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_guardariancom_final_total = $amount;
+
+if ($paygatedotto_guardariancom_currency === 'USD') {
+        $paygatedotto_guardariancom_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_guardariancom_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_guardariancom_currency));
+
+
+$paygatedotto_guardariancom_minimumcheck_conversion_resp = json_decode($paygatedotto_guardariancom_minimumcheck_response, true);
+
+if ($paygatedotto_guardariancom_minimumcheck_conversion_resp && isset($paygatedotto_guardariancom_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_guardariancom_minimumcheck_final_total	= $paygatedotto_guardariancom_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_guardariancom_minimumcheck_final_total < 20) {
+return "Error: Invoice total must be $20 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_guardariancom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 

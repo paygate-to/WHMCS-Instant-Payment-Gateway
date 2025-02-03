@@ -46,6 +46,27 @@ function coinbase_link($params)
 	$paygatedotto_coinbasecom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 	$paygatedotto_coinbasecom_final_total = $amount;
+
+if ($paygatedotto_coinbasecom_currency === 'USD') {
+        $paygatedotto_coinbasecom_minimumcheck_final_total = $amount;
+		} else {
+$paygatedotto_coinbasecom_minimumcheck_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_coinbasecom_currency));
+
+
+$paygatedotto_coinbasecom_minimumcheck_conversion_resp = json_decode($paygatedotto_coinbasecom_minimumcheck_response, true);
+
+if ($paygatedotto_coinbasecom_minimumcheck_conversion_resp && isset($paygatedotto_coinbasecom_minimumcheck_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_coinbasecom_minimumcheck_final_total	= $paygatedotto_coinbasecom_minimumcheck_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}
+
+}
+
+if ($paygatedotto_coinbasecom_minimumcheck_final_total < 2) {
+return "Error: Invoice total must be $2 USD or more for the selected payment provider.";
+}
 				
 $paygatedotto_coinbasecom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
