@@ -3,27 +3,27 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-function upi_MetaData()
+function werteur_MetaData()
 {
     return array(
-        'DisplayName' => 'upi',
+        'DisplayName' => 'werteur',
         'DisableLocalCreditCardInput' => true,
     );
 }
 
-function upi_config()
+function werteur_config()
 {
     return array(
         'FriendlyName' => array(
             'Type' => 'System',
-            'Value' => 'upi',
+            'Value' => 'werteur',
         ),
         'description' => array(
             'FriendlyName' => 'Description',
             'Type' => 'textarea',
             'Rows' => '3',
             'Cols' => '25',
-            'Default' => 'Pay using UPI/IMPS.',
+            'Default' => 'Pay using wert.io (EUR).',
             'Description' => 'This controls the description which the user sees during checkout.',
         ),
         'wallet_address' => array(
@@ -34,45 +34,45 @@ function upi_config()
     );
 }
 
-function upi_link($params)
+function werteur_link($params)
 {
     $walletAddress = $params['wallet_address'];
     $amount = $params['amount'];
     $invoiceId = $params['invoiceid'];
 	$email = $params['clientdetails']['email'];
     $systemUrl = rtrim($params['systemurl'], '/');
-    $redirectUrl = $systemUrl . '/modules/gateways/callback/upi.php';
+    $redirectUrl = $systemUrl . '/modules/gateways/callback/werteur.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$paygatedotto_upiimps_currency = $params['currency'];
+	$paygatedotto_wertioeur_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 
-if ($paygatedotto_upiimps_currency !== 'INR') {
-        return "Error: Invoice currency must be INR";
+if ($paygatedotto_wertioeur_currency !== 'EUR') {
+        return "Error: Invoice currency must be EUR";
 		} else {
-		$paygatedotto_upiimps_final_total = $amount;
-		if ($paygatedotto_upiimps_final_total < 100) {
-return "Error: Invoice total must be ₹100 or more for the selected payment provider.";
+		$paygatedotto_wertioeur_final_total = $amount;
+		if ($paygatedotto_wertioeur_final_total < 1) {
+return "Error: Invoice total must be €1 or more for the selected payment provider.";
 }
 		}
 		
 		
 		
 		
-$paygatedotto_upiimps_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_wertioeur_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$paygatedotto_upiimps_wallet_decbody = json_decode($paygatedotto_upiimps_gen_wallet, true);
+	$paygatedotto_wertioeur_wallet_decbody = json_decode($paygatedotto_wertioeur_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($paygatedotto_upiimps_wallet_decbody && isset($paygatedotto_upiimps_wallet_decbody['address_in'])) {
+    if ($paygatedotto_wertioeur_wallet_decbody && isset($paygatedotto_wertioeur_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $paygatedotto_upiimps_gen_addressIn = $paygatedotto_upiimps_wallet_decbody['address_in'];
-        $paygatedotto_upiimps_gen_polygon_addressIn = $paygatedotto_upiimps_wallet_decbody['polygon_address_in'];
-		$paygatedotto_upiimps_gen_callback = $paygatedotto_upiimps_wallet_decbody['callback_url'];
+        $paygatedotto_wertioeur_gen_addressIn = $paygatedotto_wertioeur_wallet_decbody['address_in'];
+        $paygatedotto_wertioeur_gen_polygon_addressIn = $paygatedotto_wertioeur_wallet_decbody['polygon_address_in'];
+		$paygatedotto_wertioeur_gen_callback = $paygatedotto_wertioeur_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $paygatedotto_upiimps_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_wertioeur_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -86,35 +86,35 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_upiimps_gen_addressIn . '&amount=' . $paygatedotto_upiimps_final_total . '&provider=upi&email=' . urlencode($email) . '&currency=' . $paygatedotto_upiimps_currency;
+        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_wertioeur_gen_addressIn . '&amount=' . $paygatedotto_wertioeur_final_total . '&provider=werteur&email=' . urlencode($email) . '&currency=' . $paygatedotto_wertioeur_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';
 }
 
-function upi_activate()
+function werteur_activate()
 {
     // You can customize activation logic if needed
-    return array('status' => 'success', 'description' => 'upi gateway activated successfully.');
+    return array('status' => 'success', 'description' => 'werteur gateway activated successfully.');
 }
 
-function upi_deactivate()
+function werteur_deactivate()
 {
     // You can customize deactivation logic if needed
-    return array('status' => 'success', 'description' => 'upi gateway deactivated successfully.');
+    return array('status' => 'success', 'description' => 'werteur gateway deactivated successfully.');
 }
 
-function upi_upgrade($vars)
+function werteur_upgrade($vars)
 {
     // You can customize upgrade logic if needed
 }
 
-function upi_output($vars)
+function werteur_output($vars)
 {
     // Output additional information if needed
 }
 
-function upi_error($vars)
+function werteur_error($vars)
 {
     // Handle errors if needed
 }
