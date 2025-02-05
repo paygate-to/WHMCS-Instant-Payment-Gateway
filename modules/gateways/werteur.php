@@ -46,17 +46,26 @@ function werteur_link($params)
 	$paygatedotto_wertioeur_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 
-if ($paygatedotto_wertioeur_currency !== 'EUR') {
-        return "Error: Invoice currency must be EUR";
+if ($paygatedotto_wertioeur_currency === 'EUR') {
+        $paygatedotto_wertioeur_final_total = $amount;
 		} else {
-		$paygatedotto_wertioeur_final_total = $amount;
-		if ($paygatedotto_wertioeur_final_total < 1) {
-return "Error: Invoice total must be €1 or more for the selected payment provider.";
-}
+		
+$paygatedotto_wertioeur_response = file_get_contents('https://api.paygate.to/crypto/erc20/eurc/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_wertioeur_currency));
+
+
+$paygatedotto_wertioeur_conversion_resp = json_decode($paygatedotto_wertioeur_response, true);
+
+if ($paygatedotto_wertioeur_conversion_resp && isset($paygatedotto_wertioeur_conversion_resp['value_coin'])) {
+    // Escape output
+    $paygatedotto_wertioeur_final_total	= $paygatedotto_wertioeur_conversion_resp['value_coin'];      
+} else {
+	return "Error: Payment could not be processed, please try again (unsupported store currency)";
+}	
 		}
 		
-		
-		
+if ($paygatedotto_wertioeur_final_total < 1) {
+return "Error: Invoice total must be €1 or more for the selected payment provider.";
+}		
 		
 $paygatedotto_wertioeur_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
