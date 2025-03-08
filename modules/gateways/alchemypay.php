@@ -64,8 +64,8 @@ if ($paygatedotto_alchemypayorg_minimumcheck_conversion_resp && isset($paygatedo
 
 }
 
-if ($paygatedotto_alchemypayorg_minimumcheck_final_total < 5) {
-return "Error: Invoice total must be $5 USD or more for the selected payment provider.";
+if ($paygatedotto_alchemypayorg_minimumcheck_final_total < 15) {
+return "Error: Invoice total must be $15 USD or more for the selected payment provider.";
 }
 				
 $paygatedotto_alchemypayorg_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
