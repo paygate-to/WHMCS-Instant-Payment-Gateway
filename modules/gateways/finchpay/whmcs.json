@@ -1,0 +1,31 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "finchpay",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "finchpay",
+    "tagline": "Instant Approval High Risk Merchant Gateway (finchpay.io)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDT BEP20 wallet using finchpay.io infrastructure",
+    "features": [
+      "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
+      "Instant Approval",
+      "Instant payouts to your USDT BEP20 wallet",
+      "ZERO Chargebacks all payments are final."
+    ]
+  },
+  "logo": {
+    "filename": "finchpay.png"
+  },
+  "support": {
+    "homepage": "https:\/\/paygate.to\/",
+    "docs_url": "https:\/\/paygate.to\/"
+  },
+  "authors": [
+    {
+      "name": "PayGate.to",
+      "homepage": "https:\/\/paygate.to\/"
+    }
+  ]
+}
