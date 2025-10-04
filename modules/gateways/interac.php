@@ -26,6 +26,12 @@ function interac_config()
             'Default' => 'Pay using Interac CAD.',
             'Description' => 'This controls the description which the user sees during checkout.',
         ),
+        'custom_domain' => array(
+            'FriendlyName' => 'Custom Domain',
+            'Type' => 'text',
+			'Default' => 'checkout.paygate.to',
+            'Description' => 'Follow the custom domain guide to use your own domain name for the checkout pages and links.',
+        ),
         'wallet_address' => array(
             'FriendlyName' => 'USDC Polygon Wallet Address',
             'Type' => 'text',
@@ -37,6 +43,7 @@ function interac_config()
 function interac_link($params)
 {
     $walletAddress = $params['wallet_address'];
+    $customDomain = rtrim(str_replace(['https://','http://'], '', $params['custom_domain']), '/');
     $amount = $params['amount'];
     $invoiceId = $params['invoiceid'];
 	$email = $params['clientdetails']['email'];
@@ -86,7 +93,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_interaccad_gen_addressIn . '&amount=' . $paygatedotto_interaccad_final_total . '&provider=interac&email=' . urlencode($email) . '&currency=' . $paygatedotto_interaccad_currency;
+        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_interaccad_gen_addressIn . '&amount=' . $paygatedotto_interaccad_final_total . '&provider=interac&email=' . urlencode($email) . '&currency=' . $paygatedotto_interaccad_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

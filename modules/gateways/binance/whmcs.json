@@ -1,22 +1,22 @@
 {
   "schema": "1.0",
   "type": "whmcs-gateways",
-  "name": "coinbase",
+  "name": "binance",
   "license": "proprietary",
   "category": "payments",
   "description": {
-    "name": "coinbase",
-    "tagline": "Instant Approval High Risk Merchant Gateway (coinbase.com)",
-    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using coinbase.com infrastructure",
+    "name": "binance",
+    "tagline": "Instant Approval High Risk Merchant Gateway (binance.com)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using binance.com infrastructure",
     "features": [
-      "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
+      "Accept Binance.com payments directly on your site",
       "Instant Approval",
       "Instant payouts to your USDC Polygon wallet",
       "ZERO Chargebacks all payments are final."
     ]
   },
   "logo": {
-    "filename": "coinbase.png"
+    "filename": "binance.png"
   },
   "support": {
     "homepage": "https:\/\/paygate.to\/",

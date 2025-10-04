@@ -26,6 +26,12 @@ function revolut_config()
             'Default' => 'Pay using Credit/debit card (including MasterCard, Visa, and Apple Pay).',
             'Description' => 'This controls the description which the user sees during checkout.',
         ),
+        'custom_domain' => array(
+            'FriendlyName' => 'Custom Domain',
+            'Type' => 'text',
+			'Default' => 'checkout.paygate.to',
+            'Description' => 'Follow the custom domain guide to use your own domain name for the checkout pages and links.',
+        ),
         'wallet_address' => array(
             'FriendlyName' => 'USDC Polygon Wallet Address',
             'Type' => 'text',
@@ -37,6 +43,7 @@ function revolut_config()
 function revolut_link($params)
 {
     $walletAddress = $params['wallet_address'];
+    $customDomain = rtrim(str_replace(['https://','http://'], '', $params['custom_domain']), '/');
     $amount = $params['amount'];
     $invoiceId = $params['invoiceid'];
 	$email = $params['clientdetails']['email'];
@@ -96,7 +103,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://checkout.paygate.to/process-payment.php?address=' . $paygatedotto_revolutcom_gen_addressIn . '&amount=' . $paygatedotto_revolutcom_final_total . '&provider=revolut&email=' . urlencode($email) . '&currency=' . $paygatedotto_revolutcom_currency;
+        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_revolutcom_gen_addressIn . '&amount=' . $paygatedotto_revolutcom_final_total . '&provider=revolut&email=' . urlencode($email) . '&currency=' . $paygatedotto_revolutcom_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

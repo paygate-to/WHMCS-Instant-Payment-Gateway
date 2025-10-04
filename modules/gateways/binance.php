@@ -3,20 +3,20 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-function transfi_MetaData()
+function binance_MetaData()
 {
     return array(
-        'DisplayName' => 'transfi',
+        'DisplayName' => 'binance',
         'DisableLocalCreditCardInput' => true,
     );
 }
 
-function transfi_config()
+function binance_config()
 {
     return array(
         'FriendlyName' => array(
             'Type' => 'System',
-            'Value' => 'transfi',
+            'Value' => 'binance',
         ),
         'description' => array(
             'FriendlyName' => 'Description',
@@ -40,7 +40,7 @@ function transfi_config()
     );
 }
 
-function transfi_link($params)
+function binance_link($params)
 {
     $walletAddress = $params['wallet_address'];
     $customDomain = rtrim(str_replace(['https://','http://'], '', $params['custom_domain']), '/');
@@ -48,48 +48,48 @@ function transfi_link($params)
     $invoiceId = $params['invoiceid'];
 	$email = $params['clientdetails']['email'];
     $systemUrl = rtrim($params['systemurl'], '/');
-    $redirectUrl = $systemUrl . '/modules/gateways/callback/transfi.php';
+    $redirectUrl = $systemUrl . '/modules/gateways/callback/binance.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
-	$paygatedotto_transficom_currency = $params['currency'];
+	$paygatedotto_binancecom_currency = $params['currency'];
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
 
-if ($paygatedotto_transficom_currency === 'USD') {
-        $paygatedotto_transficom_final_total = $amount;
+if ($paygatedotto_binancecom_currency === 'USD') {
+        $paygatedotto_binancecom_final_total = $amount;
 		} else {
 		
-$paygatedotto_transficom_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_transficom_currency));
+$paygatedotto_binancecom_response = file_get_contents('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_binancecom_currency));
 
 
-$paygatedotto_transficom_conversion_resp = json_decode($paygatedotto_transficom_response, true);
+$paygatedotto_binancecom_conversion_resp = json_decode($paygatedotto_binancecom_response, true);
 
-if ($paygatedotto_transficom_conversion_resp && isset($paygatedotto_transficom_conversion_resp['value_coin'])) {
+if ($paygatedotto_binancecom_conversion_resp && isset($paygatedotto_binancecom_conversion_resp['value_coin'])) {
     // Escape output
-    $paygatedotto_transficom_final_total	= $paygatedotto_transficom_conversion_resp['value_coin'];      
+    $paygatedotto_binancecom_final_total	= $paygatedotto_binancecom_conversion_resp['value_coin'];      
 } else {
 	return "Error: Payment could not be processed, please try again (unsupported store currency)";
 }	
 		}
 		
-if ($paygatedotto_transficom_final_total < 70) {
-return "Error: Invoice total must be $70 USD or more for the selected payment provider.";
+if ($paygatedotto_binancecom_final_total < 15) {
+return "Error: Invoice total must be $15 USD or more for the selected payment provider.";
 }		
 		
 		
-$paygatedotto_transficom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_binancecom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
-	$paygatedotto_transficom_wallet_decbody = json_decode($paygatedotto_transficom_gen_wallet, true);
+	$paygatedotto_binancecom_wallet_decbody = json_decode($paygatedotto_binancecom_gen_wallet, true);
 
  // Check if decoding was successful
-    if ($paygatedotto_transficom_wallet_decbody && isset($paygatedotto_transficom_wallet_decbody['address_in'])) {
+    if ($paygatedotto_binancecom_wallet_decbody && isset($paygatedotto_binancecom_wallet_decbody['address_in'])) {
         // Store the address_in as a variable
-        $paygatedotto_transficom_gen_addressIn = $paygatedotto_transficom_wallet_decbody['address_in'];
-        $paygatedotto_transficom_gen_polygon_addressIn = $paygatedotto_transficom_wallet_decbody['polygon_address_in'];
-		$paygatedotto_transficom_gen_callback = $paygatedotto_transficom_wallet_decbody['callback_url'];
+        $paygatedotto_binancecom_gen_addressIn = $paygatedotto_binancecom_wallet_decbody['address_in'];
+        $paygatedotto_binancecom_gen_polygon_addressIn = $paygatedotto_binancecom_wallet_decbody['polygon_address_in'];
+		$paygatedotto_binancecom_gen_callback = $paygatedotto_binancecom_wallet_decbody['callback_url'];
 		
 		
 		 // Update the invoice description to include address_in
-            $invoiceDescription = "Payment reference number: $paygatedotto_transficom_gen_polygon_addressIn";
+            $invoiceDescription = "Payment reference number: $paygatedotto_binancecom_gen_polygon_addressIn";
 
             // Update the invoice with the new description
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
@@ -103,35 +103,35 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_transficom_gen_addressIn . '&amount=' . $paygatedotto_transficom_final_total . '&provider=transfi&email=' . urlencode($email) . '&currency=' . $paygatedotto_transficom_currency;
+        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_binancecom_gen_addressIn . '&amount=' . $amount . '&provider=binance&email=' . urlencode($email) . '&currency=' . $paygatedotto_binancecom_currency;
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';
 }
 
-function transfi_activate()
+function binance_activate()
 {
     // You can customize activation logic if needed
-    return array('status' => 'success', 'description' => 'transfi gateway activated successfully.');
+    return array('status' => 'success', 'description' => 'binance gateway activated successfully.');
 }
 
-function transfi_deactivate()
+function binance_deactivate()
 {
     // You can customize deactivation logic if needed
-    return array('status' => 'success', 'description' => 'transfi gateway deactivated successfully.');
+    return array('status' => 'success', 'description' => 'binance gateway deactivated successfully.');
 }
 
-function transfi_upgrade($vars)
+function binance_upgrade($vars)
 {
     // You can customize upgrade logic if needed
 }
 
-function transfi_output($vars)
+function binance_output($vars)
 {
     // Output additional information if needed
 }
 
-function transfi_error($vars)
+function binance_error($vars)
 {
     // Handle errors if needed
 }
