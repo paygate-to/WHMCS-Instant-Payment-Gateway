@@ -1,0 +1,31 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "paygatedottocustom",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "paygatedottocustom",
+    "tagline": "Instant Approval Payment Gateway with Instant Payouts (custom provider mode)",
+    "long": "Instant Approval High Risk Merchant Gateway with instant payouts to your USDC POLYGON wallet using custom provider you insert",
+    "features": [
+      "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
+      "Instant Approval",
+      "Instant payouts to your USDC Polygon wallet",
+      "ZERO Chargebacks all payments are final."
+    ]
+  },
+  "logo": {
+    "filename": "paygatedottocustom.png"
+  },
+  "support": {
+    "homepage": "https:\/\/paygate.to\/",
+    "docs_url": "https:\/\/paygate.to\/"
+  },
+  "authors": [
+    {
+      "name": "PayGate.to",
+      "homepage": "https:\/\/paygate.to\/"
+    }
+  ]
+}
