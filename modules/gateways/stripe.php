@@ -103,7 +103,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_stripecom_gen_addressIn . '&amount=' . $paygatedotto_stripecom_final_total . '&provider=stripe&email=' . urlencode($email) . '&currency=' . $paygatedotto_stripecom_currency;
+        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_stripecom_gen_addressIn . '&amount=' . $paygatedotto_stripecom_final_total . '&provider=stripe&email=' . urlencode($email) . '&currency=USD';
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

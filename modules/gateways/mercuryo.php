@@ -71,8 +71,8 @@ if ($paygatedotto_mercuryoio_minimumcheck_conversion_resp && isset($paygatedotto
 
 }
 
-if ($paygatedotto_mercuryoio_minimumcheck_final_total < 30) {
-return "Error: Invoice total must be $30 USD or more for the selected payment provider.";
+if ($paygatedotto_mercuryoio_minimumcheck_final_total < 15) {
+return "Error: Invoice total must be $15 USD or more for the selected payment provider.";
 }
 				
 $paygatedotto_mercuryoio_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));

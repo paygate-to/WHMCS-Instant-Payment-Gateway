@@ -103,7 +103,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_rampnetwork_gen_addressIn . '&amount=' . $paygatedotto_rampnetwork_final_total . '&provider=rampnetwork&email=' . urlencode($email) . '&currency=' . $paygatedotto_rampnetwork_currency;
+        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_rampnetwork_gen_addressIn . '&amount=' . $paygatedotto_rampnetwork_final_total . '&provider=rampnetwork&email=' . urlencode($email) . '&currency=USD';
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';

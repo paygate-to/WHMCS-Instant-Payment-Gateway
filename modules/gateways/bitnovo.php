@@ -103,7 +103,7 @@ return "Error: Payment could not be processed, please try again (wallet address 
     }
 	
 	
-        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_bitnovocom_gen_addressIn . '&amount=' . $paygatedotto_bitnovocom_final_total . '&provider=bitnovo&email=' . urlencode($email) . '&currency=' . $paygatedotto_bitnovocom_currency;
+        $paymentUrl = 'https://' . $customDomain . '/process-payment.php?address=' . $paygatedotto_bitnovocom_gen_addressIn . '&amount=' . $paygatedotto_bitnovocom_final_total . '&provider=bitnovo&email=' . urlencode($email) . '&currency=USD';
 
         // Properly encode attributes for HTML output
         return '<a href="' . $paymentUrl . '" class="btn btn-primary" rel="noreferrer">' . $params['langpaynow'] . '</a>';
