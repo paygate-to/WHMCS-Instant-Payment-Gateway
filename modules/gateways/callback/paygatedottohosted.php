@@ -19,6 +19,8 @@ $gatewayModuleName = basename(__FILE__, '.php');
 $gatewayParams = getGatewayVariables($gatewayModuleName);
 
 // Retrieve the invoice information using localAPI
+$secret = hash('sha256', 'paygate_salt_' . $gatewayParams['wallet_address']);
+if(!hash_equals(hash_hmac('sha256', $invoiceId, $secret), ($_GET['sig'] ?? ''))) { die('Invalid callback signature'); }
 $invoice = localAPI('GetInvoice', ['invoiceid' => $invoiceId]);
 
 if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {

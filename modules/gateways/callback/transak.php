@@ -10,6 +10,8 @@ if (empty($invoiceId)) {
 require_once __DIR__ . '/../../../init.php';
 
 // Retrieve the invoice information
+$secret = hash('sha256', 'paygate_salt_' . $gatewayParams['wallet_address']);
+if(!hash_equals(hash_hmac('sha256', $invoiceId, $secret), ($_GET['sig'] ?? ''))) { die('Invalid callback signature'); }
 $invoice = localAPI('GetInvoice', array('invoiceid' => $invoiceId));
 
 if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {

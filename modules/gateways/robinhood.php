@@ -51,7 +51,9 @@ function robinhood_link($params)
     $redirectUrl = $systemUrl . '/modules/gateways/callback/robinhood.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
 	$paygatedotto_robinhoodcom_currency = $params['currency'];
-	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
+	$secret = hash('sha256', 'paygate_salt_' . $walletAddress);
+	$sig = hash_hmac('sha256', $invoiceId, $secret);
+	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId . '&sig=' . $sig;
 
 if ($paygatedotto_robinhoodcom_currency === 'USD') {
         $paygatedotto_robinhoodcom_final_total = $amount;

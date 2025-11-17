@@ -51,7 +51,9 @@ function guardarian_link($params)
     $redirectUrl = $systemUrl . '/modules/gateways/callback/guardarian.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
 	$paygatedotto_guardariancom_currency = $params['currency'];
-	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
+	$secret = hash('sha256', 'paygate_salt_' . $walletAddress);
+	$sig = hash_hmac('sha256', $invoiceId, $secret);
+	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId . '&sig=' . $sig;
 	$paygatedotto_guardariancom_final_total = $amount;
 
 if ($paygatedotto_guardariancom_currency === 'USD') {

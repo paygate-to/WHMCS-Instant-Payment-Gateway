@@ -65,7 +65,9 @@ function paygatedottocustom_link($params)
     $redirectUrl = $systemUrl . '/modules/gateways/callback/paygatedottocustom.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
 	$paygatedotto_paygatedottocustom_currency = $params['currency'];
-	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
+	$secret = hash('sha256', 'paygate_salt_' . $walletAddress);
+	$sig = hash_hmac('sha256', $invoiceId, $secret);
+	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId . '&sig=' . $sig;
 
     $minimumAmount = isset($params['minimum_amount']) && is_numeric($params['minimum_amount']) ? floatval($params['minimum_amount']) : 15.0;
 

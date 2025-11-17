@@ -51,7 +51,9 @@ function rampnetwork_link($params)
     $redirectUrl = $systemUrl . '/modules/gateways/callback/rampnetwork.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
 	$paygatedotto_rampnetwork_currency = $params['currency'];
-	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId;
+	$secret = hash('sha256', 'paygate_salt_' . $walletAddress);
+	$sig = hash_hmac('sha256', $invoiceId, $secret);
+	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId . '&sig=' . $sig;
 
 if ($paygatedotto_rampnetwork_currency === 'USD') {
         $paygatedotto_rampnetwork_final_total = $amount;
