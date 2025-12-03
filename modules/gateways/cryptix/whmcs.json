@@ -1,0 +1,31 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "cryptix",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "cryptix",
+    "tagline": "Instant Approval High Risk Merchant Gateway (cryptix.io)",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your USDC Polygon wallet using cryptix.io infrastructure",
+    "features": [
+      "Accept all major credit and debit cards including Visa and Mastercard directly on your site",
+      "Instant Approval",
+      "Instant payouts to your USDC Polygon wallet",
+      "ZERO Chargebacks all payments are final."
+    ]
+  },
+  "logo": {
+    "filename": "cryptix.png"
+  },
+  "support": {
+    "homepage": "https:\/\/paygate.to\/",
+    "docs_url": "https:\/\/paygate.to\/"
+  },
+  "authors": [
+    {
+      "name": "PayGate.to",
+      "homepage": "https:\/\/paygate.to\/"
+    }
+  ]
+}
