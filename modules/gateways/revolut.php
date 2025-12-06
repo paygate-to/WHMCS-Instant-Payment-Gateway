@@ -73,8 +73,8 @@ if ($paygatedotto_revolutcom_minimumcheck_conversion_resp && isset($paygatedotto
 
 }
 
-if ($paygatedotto_revolutcom_minimumcheck_final_total < 15) {
-return "Error: Invoice total must be $15 USD or more for the selected payment provider.";
+if ($paygatedotto_revolutcom_minimumcheck_final_total < 8) {
+return "Error: Invoice total must be $8 USD or more for the selected payment provider.";
 }
 				
 $paygatedotto_revolutcom_gen_wallet = file_get_contents('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
