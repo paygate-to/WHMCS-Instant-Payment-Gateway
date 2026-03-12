@@ -1,7 +1,22 @@
 <?php
 // Retrieve the invoice ID and received amount from the query string
 $invoiceId = $_GET['invoice_id'];
+$paid_coinname = $_GET['coin'];
+if ($paid_coinname == 'polygon_pol' || $paid_coinname == 'eth' || $paid_coinname == 'bep20_bnb') {
+	
+$paygatedottogateway_rampnetworkpaid_strname_coin = str_replace('_', '/', $paid_coinname);
+
+$paygatedottogateway_rampnetwork_response_minimum = file_get_contents('https://api.paygate.to/crypto/' . $paygatedottogateway_rampnetworkpaid_strname_coin . '/info.php');
+$paygatedottogateway_rampnetwork_conversion_resp_minimum = json_decode($paygatedottogateway_rampnetwork_response_minimum, true);
+if ($paygatedottogateway_rampnetwork_conversion_resp_minimum && isset($paygatedottogateway_rampnetwork_conversion_resp_minimum['prices']['USD'])) {
+   $value_coin = $paygatedottogateway_rampnetwork_conversion_resp_minimum['prices']['USD'] * $_GET['value_coin'];
+} else {
+    $value_coin = $_GET['value_coin'];
+}
+
+} else {
 $value_coin = $_GET['value_coin']; // This should be the amount received in the callback
+}
 
 if (empty($invoiceId)) {
     die("Invalid invoice ID");
