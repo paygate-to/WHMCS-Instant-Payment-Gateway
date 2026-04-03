@@ -1,0 +1,31 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "paypalcom",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "paypalcom",
+    "tagline": "Instant Approval High Risk Merchant Gateway (PayPal) USA",
+    "long": "Instant approval High Risk Merchant Gateway with instant payouts to your PYUSD wallet using PayPal USA",
+    "features": [
+      "Accept PayPal USA on your site",
+      "Instant Approval",
+      "Instant payouts to your USDC Polygon wallet",
+      "ZERO Chargebacks all payments are final."
+    ]
+  },
+  "logo": {
+    "filename": "paypalcom.png"
+  },
+  "support": {
+    "homepage": "https:\/\/paygate.to\/",
+    "docs_url": "https:\/\/paygate.to\/"
+  },
+  "authors": [
+    {
+      "name": "PayGate.to",
+      "homepage": "https:\/\/paygate.to\/"
+    }
+  ]
+}
