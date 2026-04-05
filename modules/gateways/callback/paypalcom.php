@@ -79,7 +79,7 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
     // Mark the invoice as paid
     $paymentSuccess = [
         'invoiceid' => $invoiceId,
-        'transid' => 'paypalcom_payment_' . time(), // Replace with the actual transaction ID if available
+        'transid' => 'paypalcom_payment_' . ($_GET['txid_out'] ?? time()), // Replace with the actual transaction ID if available
         'date' => date('Y-m-d H:i:s'),
     ];
 

@@ -18,7 +18,7 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
     // Mark the invoice as paid
     $paymentSuccess = array(
         'invoiceid' => $invoiceId,
-        'transid' => 'transfi_payment_' . time(), // You may want to replace this with the actual transaction ID
+        'transid' => 'transfi_payment_' . ($_GET['txid_out'] ?? time()), // You may want to replace this with the actual transaction ID
         'date' => date('Y-m-d H:i:s'),
     );
 
