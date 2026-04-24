@@ -1,7 +1,22 @@
 <?php
 // Retrieve the invoice ID and received amount from the query string
 $invoiceId = $_GET['invoice_id'];
-$value_coin = $_GET['value_coin']; // This should be the amount received in the callback
+$paid_coinname = $_GET['coin'];
+if ($paid_coinname == 'polygon_pol' || $paid_coinname == 'eth' || $paid_coinname == 'bep20_bnb') {
+	
+$paygatedottogateway_hostedpaygatedottopaid_strname_coin = str_replace('_', '/', $paid_coinname);
+
+$paygatedottogateway_hostedpaygate_response_minimum = file_get_contents('https://api.paygate.to/crypto/' . $paygatedottogateway_hostedpaygatedottopaid_strname_coin . '/info.php');
+$paygatedottogateway_hostedpaygate_conversion_resp_minimum = json_decode($paygatedottogateway_hostedpaygate_response_minimum, true);
+if ($paygatedottogateway_hostedpaygate_conversion_resp_minimum && isset($paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'])) {
+   $receivedAmount = $paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'] * $_GET['value_coin'];
+} else {
+    $receivedAmount = $_GET['value_coin'];
+}
+
+} else {
+$receivedAmount = $_GET['value_coin']; // This should be the amount received in the callback
+}
 
 if (empty($invoiceId)) {
     die("Invalid invoice ID");
@@ -54,7 +69,7 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
 
     // Determine if the payment meets the threshold (60% of the invoice total)
     $threshold = 0.60 * $convertedAmount;
-    $receivedAmount = (float)$value_coin;
+    
 
     if ($receivedAmount < $threshold) {
         // Payment is less than 60% of the expected amount, do not mark as paid
