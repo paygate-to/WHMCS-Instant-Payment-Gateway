@@ -102,7 +102,7 @@ if ($paygatedotto_paygatedottocustom_currency === 'USD') {
         $paygatedotto_paygatedottocustom_final_total = $amount;
 		} else {
 		
-$paygatedotto_paygatedottocustom_response = paygatedotto_http_get('https://api.paygate.to/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_paygatedottocustom_currency));
+$paygatedotto_paygatedottocustom_response = paygatedotto_http_get('https://' . $customDomain . '/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_paygatedottocustom_currency));
 
 
 $paygatedotto_paygatedottocustom_conversion_resp = json_decode($paygatedotto_paygatedottocustom_response, true);
@@ -120,7 +120,7 @@ return "Error: Invoice total must be $" . number_format($minimumAmount, 2) . " U
 }		
 		
 		
-$paygatedotto_paygatedottocustom_gen_wallet = paygatedotto_http_get('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_paygatedottocustom_gen_wallet = paygatedotto_http_get('https://' . $customDomain . '/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
 	$paygatedotto_paygatedottocustom_wallet_decbody = json_decode($paygatedotto_paygatedottocustom_gen_wallet, true);

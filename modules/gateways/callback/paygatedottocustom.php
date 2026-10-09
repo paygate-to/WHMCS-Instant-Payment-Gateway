@@ -33,7 +33,7 @@ if ($paid_coinname == 'polygon_pol' || $paid_coinname == 'eth' || $paid_coinname
 	
 $paygatedottogateway_hostedpaygatedottopaid_strname_coin = str_replace('_', '/', $paid_coinname);
 
-$paygatedottogateway_hostedpaygate_response_minimum = paygatedotto_http_get('https://api.paygate.to/crypto/' . $paygatedottogateway_hostedpaygatedottopaid_strname_coin . '/info.php');
+$paygatedottogateway_hostedpaygate_response_minimum = paygatedotto_http_get('https://' . $gatewayParams['custom_domain'] . '/crypto/' . $paygatedottogateway_hostedpaygatedottopaid_strname_coin . '/info.php');
 $paygatedottogateway_hostedpaygate_conversion_resp_minimum = json_decode($paygatedottogateway_hostedpaygate_response_minimum, true);
 if ($paygatedottogateway_hostedpaygate_conversion_resp_minimum && isset($paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'])) {
    $receivedAmount = $paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'] * $_GET['value_coin'];
@@ -76,7 +76,7 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
     if ($invoiceCurrencyCode !== 'USD') {
         // Fetch conversion rate from paygate.to API
         $conversionResponse = paygatedotto_http_get(
-            'https://api.paygate.to/control/convert.php?value=' . $invoiceTotal . '&from=' . strtolower($invoiceCurrencyCode)
+            'https://' . $gatewayParams['custom_domain'] . '/control/convert.php?value=' . $invoiceTotal . '&from=' . strtolower($invoiceCurrencyCode)
         );
 
         if ($conversionResponse === false) {

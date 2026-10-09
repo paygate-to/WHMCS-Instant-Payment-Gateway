@@ -82,7 +82,7 @@ function paygatedottohosted_link($params)
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId . '&sig=' . $sig;
 	$paygatedotto_paygatedottohostedio_final_total = $amount;
 				
-$paygatedotto_paygatedottohostedio_gen_wallet = paygatedotto_http_get('https://api.paygate.to/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_paygatedottohostedio_gen_wallet = paygatedotto_http_get('https://' . $customDomain . '/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
 	$paygatedotto_paygatedottohostedio_wallet_decbody = json_decode($paygatedotto_paygatedottohostedio_gen_wallet, true);
