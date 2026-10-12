@@ -26,24 +26,24 @@ if (!function_exists('paygatedotto_http_get')) {
     }
 }
 
+if (!function_exists('paygatedotto_api_host')) {
+    /**
+     * Host for server-to-server API calls: the "API Domain" setting (your dedicated
+     * PayGate API endpoint) when it is set, otherwise the Custom Domain, as before.
+     */
+    function paygatedotto_api_host($params)
+    {
+        $host = isset($params['api_domain']) ? rtrim(str_replace(array('https://', 'http://'), '', trim((string) $params['api_domain'])), '/') : '';
+        if ($host === '' || !preg_match('/^[A-Za-z0-9.-]+$/', $host)) {
+            $host = isset($params['custom_domain']) ? rtrim(str_replace(array('https://', 'http://'), '', trim((string) $params['custom_domain'])), '/') : '';
+        }
+        return $host;
+    }
+}
+
 // Retrieve the invoice ID and received amount from the query string
 $invoiceId = $_GET['invoice_id'];
 $paid_coinname = $_GET['coin'];
-if ($paid_coinname == 'polygon_pol' || $paid_coinname == 'eth' || $paid_coinname == 'bep20_bnb') {
-	
-$paygatedottogateway_hostedpaygatedottopaid_strname_coin = str_replace('_', '/', $paid_coinname);
-
-$paygatedottogateway_hostedpaygate_response_minimum = paygatedotto_http_get('https://' . $gatewayParams['custom_domain'] . '/crypto/' . $paygatedottogateway_hostedpaygatedottopaid_strname_coin . '/info.php');
-$paygatedottogateway_hostedpaygate_conversion_resp_minimum = json_decode($paygatedottogateway_hostedpaygate_response_minimum, true);
-if ($paygatedottogateway_hostedpaygate_conversion_resp_minimum && isset($paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'])) {
-   $receivedAmount = $paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'] * $_GET['value_coin'];
-} else {
-    $receivedAmount = $_GET['value_coin'];
-}
-
-} else {
-$receivedAmount = $_GET['value_coin']; // This should be the amount received in the callback
-}
 
 if (empty($invoiceId)) {
     die("Invalid invoice ID");
@@ -63,6 +63,24 @@ $gatewayParams = getGatewayVariables($gatewayModuleName);
 // Retrieve the invoice information using localAPI
 $secret = hash('sha256', 'paygate_salt_' . $gatewayParams['wallet_address']);
 if(!hash_equals(hash_hmac('sha256', $invoiceId, $secret), ($_GET['sig'] ?? ''))) { die('Invalid callback signature'); }
+
+// Received amount in USD (coin payouts are priced via info.php; needs $gatewayParams, so it runs after the settings are loaded)
+if ($paid_coinname == 'polygon_pol' || $paid_coinname == 'eth' || $paid_coinname == 'bep20_bnb') {
+	
+$paygatedottogateway_hostedpaygatedottopaid_strname_coin = str_replace('_', '/', $paid_coinname);
+
+$paygatedottogateway_hostedpaygate_response_minimum = paygatedotto_http_get('https://' . paygatedotto_api_host($gatewayParams) . '/crypto/' . $paygatedottogateway_hostedpaygatedottopaid_strname_coin . '/info.php');
+$paygatedottogateway_hostedpaygate_conversion_resp_minimum = json_decode($paygatedottogateway_hostedpaygate_response_minimum, true);
+if ($paygatedottogateway_hostedpaygate_conversion_resp_minimum && isset($paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'])) {
+   $receivedAmount = $paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'] * $_GET['value_coin'];
+} else {
+    $receivedAmount = $_GET['value_coin'];
+}
+
+} else {
+$receivedAmount = $_GET['value_coin']; // This should be the amount received in the callback
+}
+
 $invoice = localAPI('GetInvoice', ['invoiceid' => $invoiceId]);
 
 if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
@@ -76,7 +94,7 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
     if ($invoiceCurrencyCode !== 'USD') {
         // Fetch conversion rate from paygate.to API
         $conversionResponse = paygatedotto_http_get(
-            'https://' . $gatewayParams['custom_domain'] . '/control/convert.php?value=' . $invoiceTotal . '&from=' . strtolower($invoiceCurrencyCode)
+            'https://' . paygatedotto_api_host($gatewayParams) . '/control/convert.php?value=' . $invoiceTotal . '&from=' . strtolower($invoiceCurrencyCode)
         );
 
         if ($conversionResponse === false) {

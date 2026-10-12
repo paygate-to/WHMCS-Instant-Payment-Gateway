@@ -29,6 +29,21 @@ if (!function_exists('paygatedotto_http_get')) {
     }
 }
 
+if (!function_exists('paygatedotto_api_host')) {
+    /**
+     * Host for server-to-server API calls: the "API Domain" setting (your dedicated
+     * PayGate API endpoint) when it is set, otherwise the Custom Domain, as before.
+     */
+    function paygatedotto_api_host($params)
+    {
+        $host = isset($params['api_domain']) ? rtrim(str_replace(array('https://', 'http://'), '', trim((string) $params['api_domain'])), '/') : '';
+        if ($host === '' || !preg_match('/^[A-Za-z0-9.-]+$/', $host)) {
+            $host = isset($params['custom_domain']) ? rtrim(str_replace(array('https://', 'http://'), '', trim((string) $params['custom_domain'])), '/') : '';
+        }
+        return $host;
+    }
+}
+
 function paygatedottocustom_MetaData()
 {
     return array(
@@ -57,6 +72,12 @@ function paygatedottocustom_config()
             'Type' => 'text',
 			'Default' => 'checkout.paygate.to',
             'Description' => 'Follow the custom domain guide to use your own domain name for the checkout pages and links.',
+        ),
+        'api_domain' => array(
+            'FriendlyName' => 'API Domain',
+            'Type' => 'text',
+            'Default' => '',
+            'Description' => 'Your dedicated API endpoint from <a href="https://paygate.to/white-label-api-custom-domain-guide/#dedicated-endpoint" target="_blank" rel="noopener">paygate.to</a>, e.g. api-yourshop-1a2b&hellip;.paygate.to, used for wallet and conversion calls. Leave empty to keep using the Custom Domain above.',
         ),
 		'custom_provider' => array(
             'FriendlyName' => 'Custom Provider Tag',
@@ -102,7 +123,7 @@ if ($paygatedotto_paygatedottocustom_currency === 'USD') {
         $paygatedotto_paygatedottocustom_final_total = $amount;
 		} else {
 		
-$paygatedotto_paygatedottocustom_response = paygatedotto_http_get('https://' . $customDomain . '/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_paygatedottocustom_currency));
+$paygatedotto_paygatedottocustom_response = paygatedotto_http_get('https://' . paygatedotto_api_host($params) . '/control/convert.php?value=' . $amount . '&from=' . strtolower($paygatedotto_paygatedottocustom_currency));
 
 
 $paygatedotto_paygatedottocustom_conversion_resp = json_decode($paygatedotto_paygatedottocustom_response, true);
@@ -120,7 +141,7 @@ return "Error: Invoice total must be $" . number_format($minimumAmount, 2) . " U
 }		
 		
 		
-$paygatedotto_paygatedottocustom_gen_wallet = paygatedotto_http_get('https://' . $customDomain . '/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
+$paygatedotto_paygatedottocustom_gen_wallet = paygatedotto_http_get('https://' . paygatedotto_api_host($params) . '/control/wallet.php?address=' . $walletAddress .'&callback=' . urlencode($callback_URL));
 
 
 	$paygatedotto_paygatedottocustom_wallet_decbody = json_decode($paygatedotto_paygatedottocustom_gen_wallet, true);
