@@ -90,6 +90,24 @@ function paygatedottocustom_config()
             'Type' => 'text',
             'Description' => 'Insert your USDC (Polygon) wallet address to receive instant payouts. Payouts maybe sent in ETH or USDC or USDT (Polygon or BEP-20) or POL native token. Same wallet should work to receive all. Make sure you use a self-custodial wallet to receive payouts.',
         ),
+        'tolerance_percentage' => array(
+            'FriendlyName' => 'Fees Tolerance',
+            'Type' => 'dropdown',
+            'Options' => array(
+                '0.90' => '10%',
+                '0.80' => '20%',
+                '0.70' => '30%',
+                '0.60' => '40%',
+                '0.50' => '50%',
+                '0.40' => '60%',
+                '0.30' => '70%',
+                '0.20' => '80%',
+                '0.10' => '90%',
+                '0' => 'Disabled amount detection',
+            ),
+            'Default' => '0.60',
+            'Description' => 'Select percentage to tolerate higher provider fees while detecting manipulation by bad customers at checkout page.',
+        ),
 		'minimum_amount' => array(
             'FriendlyName' => 'Minimum Invoice Amount (USD)',
             'Type' => 'text',
@@ -112,8 +130,9 @@ function paygatedottocustom_link($params)
     $redirectUrl = $systemUrl . '/modules/gateways/callback/paygatedottocustom.php';
 	$invoiceLink = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
 	$paygatedotto_paygatedottocustom_currency = $params['currency'];
-	$secret = hash('sha256', 'paygate_salt_' . $walletAddress);
-	$sig = hash_hmac('sha256', $invoiceId, $secret);
+	// Callback signed with a secret kept only in this WHMCS database (see paygatedotto/lib.php).
+	require_once __DIR__ . '/paygatedotto/lib.php';
+	$sig = paygatedotto_cb_sig($invoiceId);
 	$callback_URL = $redirectUrl . '?invoice_id=' . $invoiceId . '&sig=' . $sig;
 
     $minimumAmount = isset($params['minimum_amount']) && is_numeric($params['minimum_amount']) ? floatval($params['minimum_amount']) : 15.0;
@@ -157,10 +176,12 @@ $paygatedotto_paygatedottocustom_gen_wallet = paygatedotto_http_get('https://' .
 		 // Update the invoice description to include address_in
             $invoiceDescription = "Payment reference number: $paygatedotto_paygatedottocustom_gen_polygon_addressIn";
 
-            // Update the invoice with the new description
+            // Update the invoice notes, without overwriting notes the admin wrote
             $invoice = localAPI("GetInvoice", array('invoiceid' => $invoiceId), null);
-            $invoice['notes'] = $invoiceDescription;
-            localAPI("UpdateInvoice", $invoice);
+            $currentNotes = isset($invoice['notes']) ? trim((string) $invoice['notes']) : '';
+            if ($currentNotes !== $invoiceDescription && ($currentNotes === '' || strpos($currentNotes, 'Payment reference number: ') === 0)) {
+                localAPI("UpdateInvoice", array('invoiceid' => $invoiceId, 'notes' => $invoiceDescription));
+            }
 
 		
 		
