@@ -1,5 +1,9 @@
 <?php
 
+// WHMCS's init.php HTML-escapes $_SERVER['QUERY_STRING'] (every & becomes &amp;),
+// so keep the raw query string exactly as received for the PayGate signature check.
+$paygateRawQuery = isset($_SERVER['QUERY_STRING']) ? (string) $_SERVER['QUERY_STRING'] : '';
+
 if (!function_exists('paygatedotto_http_get')) {
     /**
      * Perform an HTTP GET request using cURL.
@@ -74,7 +78,7 @@ if (!paygatedotto_cb_sig_ok($invoiceId, $gatewayParams['wallet_address'], isset(
 // Check 2: PayGate's RSA signature over the exact URL it requested. Without it,
 // value_coin could be forged, so unsigned or tampered callbacks are rejected.
 $systemUrl = isset($CONFIG['SystemURL']) ? $CONFIG['SystemURL'] : \WHMCS\Config\Setting::getValue('SystemURL');
-$paygateSignature = paygatedotto_verify_paygate_signature(rtrim($systemUrl, '/') . '/modules/gateways/callback/' . $gatewayModuleName . '.php');
+$paygateSignature = paygatedotto_verify_paygate_signature(rtrim($systemUrl, '/') . '/modules/gateways/callback/' . $gatewayModuleName . '.php', $paygateRawQuery);
 if (!$paygateSignature['verified']) {
     logTransaction($gatewayParams['name'], $_GET, 'Rejected: PayGate signature ' . $paygateSignature['reason']);
     paygatedotto_cb_fail(403, 'Invalid PayGate signature (' . $paygateSignature['reason'] . ')');
