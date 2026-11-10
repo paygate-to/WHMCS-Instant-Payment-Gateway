@@ -149,7 +149,7 @@ function paygatedotto_verify_paygate_signature($registeredBase, $rawQuery = null
  */
 function paygatedotto_cb_fail($status, $message)
 {
-    $texts = array(400 => 'Bad Request', 403 => 'Forbidden', 404 => 'Not Found', 409 => 'Conflict', 502 => 'Bad Gateway');
+    $texts = array(400 => 'Bad Request', 403 => 'Forbidden', 404 => 'Not Found', 409 => 'Conflict', 502 => 'Bad Gateway', 503 => 'Service Unavailable');
     header('HTTP/1.1 ' . (int) $status . ' ' . (isset($texts[$status]) ? $texts[$status] : 'Error'));
     header('Content-Type: text/plain');
     echo $message;

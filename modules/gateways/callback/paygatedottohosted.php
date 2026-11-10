@@ -95,7 +95,9 @@ $paygatedottogateway_hostedpaygate_conversion_resp_minimum = json_decode($paygat
 if ($paygatedottogateway_hostedpaygate_conversion_resp_minimum && isset($paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'])) {
    $receivedAmount = $paygatedottogateway_hostedpaygate_conversion_resp_minimum['prices']['USD'] * $valueCoin;
 } else {
-    $receivedAmount = $valueCoin;
+    // Never value coin units as USD: answer 503 so PayGate.to calls again and the next attempt prices it.
+    logTransaction($gatewayParams['name'], $_GET, 'Coin price unavailable, not processed');
+    paygatedotto_cb_fail(503, 'Coin price unavailable, please retry');
 }
 
 } else {
@@ -119,13 +121,13 @@ if ($invoice['result'] == 'success' && $invoice['status'] != 'Paid') {
         );
 
         if ($conversionResponse === false) {
-            die("Error: Could not convert currency. Please try again.");
+            paygatedotto_cb_fail(503, 'Error: Could not convert currency. Please try again.'); // temporary: PayGate.to calls again
         }
 
         $conversionData = json_decode($conversionResponse, true);
 
         if (!isset($conversionData['value_coin'])) {
-            die("Error: Conversion failed. Please check your currency settings.");
+            paygatedotto_cb_fail(503, 'Error: Conversion failed. Please check your currency settings.'); // PayGate.to calls again
         }
 
         $convertedAmount = (float)$conversionData['value_coin'];
